@@ -11,11 +11,11 @@
 #define EP_MAGIC 0x80000400
 #define CHECKSUM_MAGIC 0xaa55
 
-
 #define PROG_INFO "+-----------------------------------+\n"\
-				  "|  Ntk calculator v0.5.1 by Tobi@s  |\n"\
+				  "|  Ntk calculator v0.5.2 by Tobi@s  |\n"\
 				  "|   https://dashcamtalk.com/forum   |\n"\
 				  "|   https://www.goprawn.com/forum   |\n"\
+				  "|     Donate: dc.p-mc.eu/donate     |\n"\
 				  "+-----------------------------------+\n"
 
 void read_file_to_mem(FILE *, uint16_t *, uint32_t);
