@@ -5,18 +5,21 @@
 
 #define FILESIZE_ADDRESS 0x68
 #define CHECKSUM_ADDRESS 0x6e
+#define CHECKSUM_ADDRESS_V2 0x46e
 #define BCLCKSM_ADDRESS 0x04
 #define CSMAGIC_ADDRESS 0x6c
+#define CSMAGIC_ADDRESS_V2 0x46c
 #define BCL_MAGIC 0x314c4342
 #define EP_MAGIC 0x80000400
 #define CHECKSUM_MAGIC 0xaa55
 
-#define PROG_INFO "+-----------------------------------+\n"\
-				  "|  Ntk calculator v0.5.2 by Tobi@s  |\n"\
-				  "|   https://dashcamtalk.com/forum   |\n"\
-				  "|   https://www.goprawn.com/forum   |\n"\
-				  "|     Donate: dc.p-mc.eu/donate     |\n"\
-				  "+-----------------------------------+\n"
+#define PROG_INFO "+-------------------------------+\n"\
+				  "| Ntk checksum calculator v0.7  |\n"\
+				  "|           by Tobi@s          |\n"\
+				  "| https://dashcamtalk.com/forum |\n"\
+				  "| https://www.goprawn.com/forum |\n"\
+				  "|   Donate: dc.p-mc.eu/donate   |\n"\
+				  "+-------------------------------+\n"
 
 void read_file_to_mem(FILE *, uint16_t *, uint32_t);
 uint16_t calc_checksum(uint16_t *, uint32_t, uint32_t, uint16_t);
@@ -30,8 +33,8 @@ int main(int argc, char *argv[]) {
   uint32_t skip_at;
   uint16_t read_checksum;
   char *read_mode = "rb";
-  enum modes { BASEVAL, CHECKSUM } mode;
-  enum formats { BCL, RAW } format;
+  enum modes { BASEVAL, CHECKSUM, CHECKSUM2 } mode;
+  enum formats { BCL, RAW, RAWv2 } format;
   
   if(argc != 3 && argc != 4) {
     print_usage(argc, argv);
@@ -73,12 +76,19 @@ int main(int argc, char *argv[]) {
   } else {
     magic = read_word_at(fp, CSMAGIC_ADDRESS);
     if(magic != CHECKSUM_MAGIC) {
-      fprintf(stderr, "Checksum magic invalid (%04x).\n", magic & 0xFFFF);
-      return -1;
+      fprintf(stdout, "[INSECURE] Checksum magic is (%04x).\n", magic & 0xFFFF);
+      //return -1;
     }
-    printf("Detected raw firmware image (NonComp)\n");
-    format = RAW;
-    skip_at = CHECKSUM_ADDRESS;
+	if(magic == 0xFFFF) {
+		printf("Detected raw eCos firmware image (NonComp)\n");
+		format = RAWv2;
+		skip_at = CHECKSUM_ADDRESS_V2;
+	} else {
+		printf("Detected raw nvt firmware image (NonComp)\n");
+		format = RAW;
+		skip_at = CHECKSUM_ADDRESS;
+	}
+
   }
 
   if(mode == BASEVAL) {

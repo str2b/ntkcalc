@@ -2,7 +2,7 @@ OBJ=obj/
 LIB=lib/
 REL=release/
 
-CC=i586-mingw32msvc-gcc
+CC=gcc
 CFLAGS=-O3 -std=c99
 
 ntkcalc: $(OBJ)ntkcalc.o $(OBJ)leio.o
@@ -34,6 +34,14 @@ $(OBJ)fwinfo.o: fwinfo.c
 
 $(OBJ)leio.o: $(LIB)leio.c
 	$(CC) -c $(LIB)leio.c -o $(OBJ)leio.o $(CFLAGS)
+	
+	
+ntkfwinfo: $(OBJ)ntkfwinfo.o
+	$(CC) -o $(REL)ntkfwinfo.exe $(OBJ)ntkfwinfo.o
+	
+$(OBJ)ntkfwinfo.o: ntkfwinfo.c
+	$(CC) -c ntkfwinfo.c -o $(OBJ)ntkfwinfo.o $(CFLAGS)
+
 	
 clean:
 	rm $(REL)*
