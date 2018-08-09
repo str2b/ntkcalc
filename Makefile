@@ -2,7 +2,8 @@ OBJ=obj/
 LIB=lib/
 REL=release/
 
-CC=gcc
+CC=i686-w64-mingw32-gcc-win32
+#CC=gcc
 CFLAGS=-O3 -std=c99
 
 ntkcalc: $(OBJ)ntkcalc.o $(OBJ)leio.o
